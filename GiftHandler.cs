@@ -34,11 +34,9 @@ public class GiftHandler
 		}
 	}
 
-	public async void OnGiftReceived(Dictionary<string, Gift> _)
+	public void OnGiftReceived(Dictionary<string, Gift> dictionary)
 	{
 		Console.WriteLine("Received Gifts : ");
-		Task<Dictionary<string, Gift>> task = GiftingService.GetAllGiftsAndEmptyGiftboxAsync();
-		Dictionary<string, Gift> dictionary = await task;
 		foreach ((string? _, Gift? gift) in dictionary)
 		{
 			Console.WriteLine(
@@ -57,5 +55,6 @@ public class GiftHandler
 		}
 
 		File.WriteAllTextAsync(SavePath, JsonConvert.SerializeObject(SavedGifts));
+		GiftingService.RemoveGiftsFromGiftBox(dictionary.Keys);
 	}
 }
