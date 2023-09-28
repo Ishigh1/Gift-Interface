@@ -10,7 +10,7 @@ public class GiftHandler
 {
 	private readonly GiftingService GiftingService;
 	private const string SavePath = "./gifts.json";
-	public Dictionary<string, (GiftItem item, GiftTrait[] traits)> SavedGifts;
+	public readonly Dictionary<string, (GiftItem item, GiftTrait[] traits)> SavedGifts;
 
 	public GiftHandler(GiftingService giftingService)
 	{
@@ -54,7 +54,7 @@ public class GiftHandler
 			SavedGifts[item.Name.ToLower()] = (item, gift.Traits);
 		}
 
-		File.WriteAllTextAsync(SavePath, JsonConvert.SerializeObject(SavedGifts));
+		File.WriteAllTextAsync(SavePath, JsonConvert.SerializeObject(SavedGifts, new JsonGiftConverter()));
 		GiftingService.RemoveGiftsFromGiftBox(dictionary.Keys);
 	}
 }

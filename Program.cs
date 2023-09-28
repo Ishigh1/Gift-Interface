@@ -42,19 +42,28 @@ switch (strings[0])
 {
 	case "exit":
 		goto end;
-	case "send":
-		string recipient = strings[1];
-		string giftName = string.Join(' ', strings, 2, strings.Length - 2).ToLower();
-		if (giftHandler.SavedGifts.TryGetValue(giftName, out (GiftItem item, GiftTrait[] traits) giftInfo))
-			giftingService.SendGift(giftInfo.item, giftInfo.traits, recipient);
-		else
-			Console.WriteLine("Unknown gift");
+	case "help":
+		Console.WriteLine("exit");
+		Console.WriteLine("list : lists all registered gift names");
+		Console.WriteLine("send <amount> <item name> <recipient name> : item name is case insensitive");
 		break;
 	case "list":
 		foreach (string savedGiftsKey in giftHandler.SavedGifts.Keys)
 		{
 			Console.WriteLine(savedGiftsKey);
 		}
+		break;
+	case "send":
+		int amount = int.Parse(strings[1]);
+		string recipient = strings[^1];
+		string giftName = string.Join(' ', strings, 2, strings.Length - 3).ToLower();
+		if (giftHandler.SavedGifts.TryGetValue(giftName, out (GiftItem item, GiftTrait[] traits) giftInfo))
+		{
+			giftInfo.item.Amount = amount;
+			giftingService.SendGift(giftInfo.item, giftInfo.traits, recipient);
+		}
+		else
+			Console.WriteLine("Unknown gift");
 		break;
 }
 
